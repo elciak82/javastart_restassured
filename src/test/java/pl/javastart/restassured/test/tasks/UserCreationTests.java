@@ -19,8 +19,17 @@ public class UserCreationTests {
                 "  \"phone\": \"+123456789\",\n" +
                 "  \"userStatus\": 1\n" +
                 "}";
-        given().log().all().body(user).contentType("application/json")
+
+        given().log().all()
+                .contentType("application/json")
+                .body(user)
                 .when().post("http://swaggerpetstore.przyklady.javastart.pl/v2/user")
+                .then().log().all().statusCode(200);
+
+        given().log().all()
+                .contentType("application/json")
+                .pathParam("username", "firstuser")
+                .when().get("http://swaggerpetstore.przyklady.javastart.pl/v2/user/{username}")
                 .then().log().all().statusCode(200);
     }
 }
