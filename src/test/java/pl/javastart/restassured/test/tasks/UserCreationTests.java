@@ -1,24 +1,24 @@
 package pl.javastart.restassured.test.tasks;
 
 import org.testng.annotations.Test;
+import pl.javastart.main.pojo.User;
 
 import static io.restassured.RestAssured.given;
 
 public class UserCreationTests {
 
     @Test
-    public void givenCorrectUserDataWhenCreateUserThenUserIsCreatedTest(){
+    public void givenCorrectUserDataWhenCreateUserThenUserIsCreatedTest() {
 
-        String user = "{\n" +
-                "  \"id\": 445,\n" +
-                "  \"username\": \"firstuser\",\n" +
-                "  \"firstName\": \"Krzysztof\",\n" +
-                "  \"lastName\": \"Kowalski\",\n" +
-                "  \"email\": \"krzysztof@test.com\",\n" +
-                "  \"password\": \"password\",\n" +
-                "  \"phone\": \"+123456789\",\n" +
-                "  \"userStatus\": 1\n" +
-                "}";
+        User user = new User();
+        user.setId(445);
+        user.setUsername("firstuser");
+        user.setFirstName("Krzysztof");
+        user.setLastName("Kowalski");
+        user.setEmail("krzysztof@test.com");
+        user.setPassword("password");
+        user.setPhone("+123456789");
+        user.setUserStatus(1);
 
         given().log().all()
                 .contentType("application/json")
@@ -28,7 +28,7 @@ public class UserCreationTests {
 
         given().log().all()
                 .contentType("application/json")
-                .pathParam("username", "firstuser")
+                .pathParam("username", user.getUsername())
                 .when().get("http://swaggerpetstore.przyklady.javastart.pl/v2/user/{username}")
                 .then().log().all().statusCode(200);
     }
