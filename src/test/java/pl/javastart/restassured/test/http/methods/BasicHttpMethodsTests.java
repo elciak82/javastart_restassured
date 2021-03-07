@@ -8,6 +8,7 @@ import pl.javastart.main.pojo.Tag;
 import java.util.Collections;
 
 import static io.restassured.RestAssured.given;
+import static org.testng.Assert.assertEquals;
 
 public class BasicHttpMethodsTests {
 
