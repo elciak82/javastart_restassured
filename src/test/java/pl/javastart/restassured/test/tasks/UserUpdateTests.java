@@ -1,11 +1,19 @@
 package pl.javastart.restassured.test.tasks;
 
+import io.restassured.RestAssured;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pl.javastart.main.pojo.User;
 
 import static io.restassured.RestAssured.given;
 
 public class UserUpdateTests {
+
+    @BeforeClass
+    public void setupConfiguration() {
+        RestAssured.baseURI = "http://swaggerpetstore.przyklady.javastart.pl";
+        RestAssured.basePath = "v2";
+    }
 
     @Test
     public void givenCorrectUserDataWhenFirstNameLastNameAreUpdatedThenUserDataIsUpdatedTest() {
@@ -23,7 +31,7 @@ public class UserUpdateTests {
         given().log().all()
                 .contentType("application/json")
                 .body(user)
-                .when().post("http://swaggerpetstore.przyklady.javastart.pl/v2/user")
+                .when().post("user")
                 .then().log().all().statusCode(200);
 
         user.setFirstName("Ewelinka");
@@ -33,13 +41,13 @@ public class UserUpdateTests {
                 .contentType("application/json")
                 .pathParam("username", user.getUsername())
                 .body(user)
-                .when().post("http://swaggerpetstore.przyklady.javastart.pl/v2/user/{username}")
+                .when().put("user/{username}")
                 .then().log().all().statusCode(200);
 
         given().log().all()
                 .contentType("application/json")
                 .pathParam("username", user.getUsername())
-                .when().get("http://swaggerpetstore.przyklady.javastart.pl/v2/user/{username}")
+                .when().get("user/{username}")
                 .then().log().all().statusCode(200);
     }
 }
