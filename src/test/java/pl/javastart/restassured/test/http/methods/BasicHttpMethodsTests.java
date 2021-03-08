@@ -1,6 +1,8 @@
 package pl.javastart.restassured.test.http.methods;
 
 import io.restassured.RestAssured;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pl.javastart.main.pojo.Category;
@@ -10,7 +12,6 @@ import pl.javastart.main.pojo.Tag;
 import java.util.Collections;
 
 import static io.restassured.RestAssured.given;
-import static org.testng.Assert.assertEquals;
 
 public class BasicHttpMethodsTests {
 
@@ -18,6 +19,7 @@ public class BasicHttpMethodsTests {
     public void setupConfiguration() { //wykona kod w podanej pod nią metodzie tylko raz, przed metodami testowymi
         RestAssured.baseURI = "https://swaggerpetstore.przyklady.javastart.pl";
         RestAssured.basePath = "v2";
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter()); // można usunąc .log().all() po given() i then(). Uruchamiając teraz dowolny test dalej logujemy żądanie i odpowiedź.
     }
 
     @Test
@@ -38,17 +40,16 @@ public class BasicHttpMethodsTests {
         pet.setTags(Collections.singletonList(tag));
         pet.setStatus("available");
 
-        given().log().all().body(pet).contentType("application/json")
+        given().body(pet).contentType("application/json")
                 .when().post("pet") //!!
-                .then().log().all().statusCode(200);
+                .then().statusCode(200);
     }
 
     @Test
     public void givenExistingPetIdWhenGetPetThenReturnPetTest() {
-        given().log().method().log().uri()
-                .pathParam("petId", 1)
-                .when().get("pet/{petId}") //!!
-                .then().log().all().statusCode(200);
+        given().pathParam("petId", 1)
+                .when().get("pet/{petId}")
+                .then().statusCode(200);
     }
 
     @Test
@@ -70,15 +71,15 @@ public class BasicHttpMethodsTests {
         pet.setTags(Collections.singletonList(tag));
         pet.setStatus("available");
 
-        given().log().all().body(pet).contentType("application/json")
+        given().body(pet).contentType("application/json")
                 .when().post("pet")
-                .then().log().all().statusCode(200);
+                .then().statusCode(200);
 
         pet.setName("wilk");
 
-        given().log().all().body(pet).contentType("application/json")
+        given().body(pet).contentType("application/json")
                 .when().put("pet")
-                .then().log().all().statusCode(200);
+                .then().statusCode(200);
     }
 
     @Test
@@ -100,13 +101,13 @@ public class BasicHttpMethodsTests {
         pet.setTags(Collections.singletonList(tag));
         pet.setStatus("available");
 
-        given().log().all().body(pet).contentType("application/json")
+        given().body(pet).contentType("application/json")
                 .when().post("pet")
-                .then().log().all().statusCode(200);
+                .then().statusCode(200);
 
-        given().log().all().contentType("application/json")
+        given().contentType("application/json")
                 .pathParam("petId", pet.getId())
                 .when().delete("pet/{petId}")
-                .then().log().all().statusCode(200);
+                .then().statusCode(200);
     }
 }

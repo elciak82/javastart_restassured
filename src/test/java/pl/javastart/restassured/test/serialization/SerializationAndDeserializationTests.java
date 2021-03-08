@@ -1,5 +1,7 @@
 package pl.javastart.restassured.test.serialization;
 
+import io.restassured.RestAssured;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pl.javastart.main.pojo.Category;
 import pl.javastart.main.pojo.Pet;
@@ -11,6 +13,12 @@ import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertEquals;
 
 public class SerializationAndDeserializationTests {
+
+    @BeforeClass
+    public void setupConfiguration() {
+        RestAssured.baseURI = "http://swaggerpetstore.przyklady.javastart.pl";
+        RestAssured.basePath = "v2";
+    }
 
     @Test
     public void givenPetWhenPostPetThenPetIsCreatedTest() {
@@ -31,7 +39,7 @@ public class SerializationAndDeserializationTests {
         pet.setStatus("available");
 
         Pet actualPet = given().log().all().body(pet).contentType("application/json")
-                .when().post("https://swaggerpetstore.przyklady.javastart.pl/v2/pet")
+                .when().post("pet")
                 .then().log().all().statusCode(200)
                 .extract().as(Pet.class); //deserializacja potrzeban do asercji poniżej
 
@@ -63,7 +71,7 @@ public class SerializationAndDeserializationTests {
         pet.setStatus("available");
 
         given().log().all().body(pet).contentType("application/json")
-                .when().post("https://swaggerpetstore.przyklady.javastart.pl/v2/pet")
+                .when().post("pet")
                 .then().log().all().statusCode(200)
                 .extract().as(Pet.class);
 
@@ -71,7 +79,7 @@ public class SerializationAndDeserializationTests {
 
         Pet actualPet = given().log().method().log().uri()
                 .pathParam("petId", pet.getId())
-                .when().get("https://swaggerpetstore.przyklady.javastart.pl/v2/pet/{petId}")
+                .when().get("pet/{petId}")
                 .then().log().all().statusCode(200)
                 .extract().as(Pet.class);
 
