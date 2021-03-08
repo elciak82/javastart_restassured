@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import pl.javastart.main.pojo.User;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 public class UserCreationTests {
 
@@ -23,7 +24,7 @@ public class UserCreationTests {
 
         User user = new User();
         user.setId(445);
-        user.setUsername("firstuser");
+        user.setUsername("pierwszy");
         user.setFirstName("Krzysztof");
         user.setLastName("Kowalski");
         user.setEmail("krzysztof@test.com");
@@ -33,11 +34,22 @@ public class UserCreationTests {
 
         given().contentType("application/json").body(user)
                 .when().post("user")
-                .then().statusCode(200);
+                .then()
+                .assertThat().body("code", equalTo(200))
+                .assertThat().body("type", equalTo("unknown"))
+                .assertThat().body("message", equalTo("445"));
 
         given().contentType("application/json").pathParam("username", user.getUsername())
                 .when().get("user/{username}")
-                .then().statusCode(200);
+                .then()
+                .assertThat().body("id", equalTo(445))
+                .assertThat().body("username", equalTo("pierwszy"))
+                .assertThat().body("firstName", equalTo("Krzysztof"))
+                .assertThat().body("lastName", equalTo("Kowalski"))
+                .assertThat().body("email", equalTo("krzysztof@test.com"))
+                .assertThat().body("password", equalTo("password"))
+                .assertThat().body("phone", equalTo("+123456789"))
+                .assertThat().body("userStatus", equalTo(1));
     }
 
     @Test
