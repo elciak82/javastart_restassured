@@ -18,11 +18,11 @@ public class QueryParamsTests {
 
         Category category = new Category();
         category.setId(0);
-        category.setName("Ciekawe czy Bartek to przeczyta? :D");
+        category.setName("Fish");
 
         Tag tag = new Tag();
         tag.setId(0);
-        tag.setName("fun-category");
+        tag.setName("fish-category");
 
         Pet pet = new Pet();
         pet.setId(666);
