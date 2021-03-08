@@ -1,6 +1,8 @@
 package pl.javastart.restassured.test.serialization;
 
 import io.restassured.RestAssured;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pl.javastart.main.pojo.Category;
@@ -18,6 +20,7 @@ public class SerializationAndDeserializationTests {
     public void setupConfiguration() {
         RestAssured.baseURI = "http://swaggerpetstore.przyklady.javastart.pl";
         RestAssured.basePath = "v2";
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
     }
 
     @Test
@@ -38,9 +41,9 @@ public class SerializationAndDeserializationTests {
         pet.setTags(Collections.singletonList(tag));
         pet.setStatus("available");
 
-        Pet actualPet = given().log().all().body(pet).contentType("application/json")
+        Pet actualPet = given().body(pet).contentType("application/json")
                 .when().post("pet")
-                .then().log().all().statusCode(200)
+                .then().statusCode(200)
                 .extract().as(Pet.class); //deserializacja potrzeban do asercji poniżej
 
         assertEquals(actualPet.getId(), pet.getId(), "Pet id");
@@ -70,18 +73,15 @@ public class SerializationAndDeserializationTests {
         pet.setTags(Collections.singletonList(tag));
         pet.setStatus("available");
 
-        given().log().all().body(pet).contentType("application/json")
+        given().body(pet).contentType("application/json")
                 .when().post("pet")
-                .then().log().all().statusCode(200)
-                .extract().as(Pet.class);
+                .then().statusCode(200).extract().as(Pet.class);
 
 
 
-        Pet actualPet = given().log().method().log().uri()
-                .pathParam("petId", pet.getId())
+        Pet actualPet = given().pathParam("petId", pet.getId())
                 .when().get("pet/{petId}")
-                .then().log().all().statusCode(200)
-                .extract().as(Pet.class);
+                .then().statusCode(200).extract().as(Pet.class);
 
         assertEquals(actualPet.getId(), pet.getId(), "Pet id");
         assertEquals(actualPet.getCategory().getId(), pet.getCategory().getId(), "Category id");
