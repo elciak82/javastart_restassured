@@ -9,14 +9,7 @@ import pl.javastart.main.pojo.User;
 
 import static io.restassured.RestAssured.given;
 
-public class UserUpdateTests {
-
-    @BeforeClass
-    public void setupConfiguration() {
-        RestAssured.baseURI = "http://swaggerpetstore.przyklady.javastart.pl";
-        RestAssured.basePath = "v2";
-        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
-    }
+public class UserUpdateTests extends TestBase {
 
     @Test
     public void givenCorrectUserDataWhenFirstNameLastNameAreUpdatedThenUserDataIsUpdatedTest() {

@@ -10,14 +10,7 @@ import pl.javastart.main.pojo.User;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-public class UserCreationTests {
-
-    @BeforeClass
-    public void setupConfiguration() {
-        RestAssured.baseURI = "http://swaggerpetstore.przyklady.javastart.pl";
-        RestAssured.basePath = "v2";
-        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
-    }
+public class UserCreationTests extends TestBase {
 
     @Test
     public void givenCorrectUserDataWhenCreateUserThenUserIsCreatedTest() {
